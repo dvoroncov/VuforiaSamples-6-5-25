@@ -4,25 +4,13 @@ import java.nio.Buffer;
 
 public abstract class MeshObject {
 
-    public enum BUFFER_TYPE {
-        BUFFER_TYPE_VERTEX, BUFFER_TYPE_TEXTURE_COORD, BUFFER_TYPE_NORMALS
-    }
+    public abstract int getGroupCount();
 
-    public Buffer getVertices() {
-        return getBuffer(BUFFER_TYPE.BUFFER_TYPE_VERTEX);
-    }
+    public abstract Buffer getTextureBuffer(int index);
 
-    public Buffer getTexCoords() {
-        return getBuffer(BUFFER_TYPE.BUFFER_TYPE_TEXTURE_COORD);
-    }
+    public abstract Buffer getVerticesBuffer(int index);
 
-    public Buffer getNormals() {
-        return getBuffer(BUFFER_TYPE.BUFFER_TYPE_NORMALS);
-    }
+    public abstract Buffer getNormalsBuffer(int index);
 
-    public abstract Buffer getBuffer(BUFFER_TYPE bufferType);
-
-    public abstract int getNumObjectVertex();
-
-    public abstract int getNumObjectIndex();
+    public abstract int getVertexCount(int index);
 }

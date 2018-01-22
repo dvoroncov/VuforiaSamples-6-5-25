@@ -2,62 +2,47 @@ package com.vuforia.samples.image_target.models_3d;
 
 import android.content.Context;
 
+import com.htc_cs.android.objparser.parser.models.Group;
 import com.vuforia.samples.image_target.utils.ModelParser;
 
 import java.nio.Buffer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Amenemhat extends MeshObject {
 
     private static final String OBJ_FILE_NAME = "3dModels/amenemhat.obj";
 
-    private ModelParser modelParser;
-    private Buffer vertBuff;
-    private Buffer texCoordBuff;
-    private Buffer normBuff;
-
-    private int indicesNumber = 0;
-    private int verticesNumber = 0;
+    private List<Group> groups = new ArrayList<>();
 
 
     public Amenemhat(Context context) {
-        modelParser = new ModelParser(context, OBJ_FILE_NAME);
-
-        vertBuff = modelParser.getVerticesBuffer();
-        texCoordBuff = modelParser.getTextureBuffer();
-        normBuff = modelParser.getNormalsBuffer();
-
-        indicesNumber = modelParser.getIndicesNumber();
-        verticesNumber = modelParser.getVerticesNumber();
-    }
-
-    public int getNumObjectIndex() {
-        return indicesNumber;
+        ModelParser modelParser = new ModelParser(context, OBJ_FILE_NAME);
+        groups = modelParser.getGroups();
     }
 
     @Override
-    public int getNumObjectVertex() {
-        return verticesNumber;
+    public int getGroupCount() {
+        return groups.size();
     }
 
     @Override
-    public Buffer getBuffer(BUFFER_TYPE bufferType) {
+    public int getVertexCount(int index) {
+        return groups.get(index).vertexCount;
+    }
 
-        Buffer result = null;
-        switch (bufferType) {
-            case BUFFER_TYPE_VERTEX:
-                result = vertBuff;
-                break;
-            case BUFFER_TYPE_TEXTURE_COORD:
-                result = texCoordBuff;
-                break;
-            case BUFFER_TYPE_NORMALS:
-                result = normBuff;
-                break;
-            default:
-                break;
+    @Override
+    public Buffer getTextureBuffer(int index) {
+        return groups.get(index).texcoords.position(0);
+    }
 
-        }
+    @Override
+    public Buffer getVerticesBuffer(int index) {
+        return groups.get(index).vertices.position(0);
+    }
 
-        return result;
+    @Override
+    public Buffer getNormalsBuffer(int index) {
+        return groups.get(index).normals.position(0);
     }
 }

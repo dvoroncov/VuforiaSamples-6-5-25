@@ -42,6 +42,7 @@ public class ImageTargetRenderer
     private int shaderProgramID;
     private int vertexHandle;
     private int textureCoordHandle;
+    private int vertexNormalHandle;
     private int mvpMatrixHandle;
     private int texSampler2DHandle;
     private int cameraPositionHandle;
@@ -145,6 +146,8 @@ public class ImageTargetRenderer
                 "vertexPosition");
         textureCoordHandle = GLES20.glGetAttribLocation(shaderProgramID,
                 "vertexTexCoord");
+        vertexNormalHandle = GLES20.glGetAttribLocation(shaderProgramID,
+                "vertexNormal");
         mvpMatrixHandle = GLES20.glGetUniformLocation(shaderProgramID,
                 "modelViewProjectionMatrix");
         texSampler2DHandle = GLES20.glGetUniformLocation(shaderProgramID,
@@ -205,41 +208,40 @@ public class ImageTargetRenderer
             // activate the shader program and bind the vertex/normal/tex coords
             GLES20.glUseProgram(shaderProgramID);
 
-            GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT,
-                    false, 0, meshObject.getVertices());
-            GLES20.glVertexAttribPointer(textureCoordHandle, 2, GLES20.GL_FLOAT,
-                    false, 0, meshObject.getTexCoords());
+            for (int i = 0; i < meshObject.getGroupCount(); i++) {
+                GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT,
+                        false, 0, meshObject.getVerticesBuffer(i));
+                GLES20.glVertexAttribPointer(textureCoordHandle, 2, GLES20.GL_FLOAT,
+                        false, 0, meshObject.getTextureBuffer(i));
+                GLES20.glVertexAttribPointer(vertexNormalHandle, 3, GLES20.GL_FLOAT,
+                        false, 0, meshObject.getNormalsBuffer(i));
 
-            GLES20.glEnableVertexAttribArray(vertexHandle);
-            GLES20.glEnableVertexAttribArray(textureCoordHandle);
+                GLES20.glEnableVertexAttribArray(vertexHandle);
+                GLES20.glEnableVertexAttribArray(textureCoordHandle);
+                GLES20.glEnableVertexAttribArray(vertexNormalHandle);
 
-            // activate texture 0, bind it, and pass to shader
-            GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,
-                    mTextures.get(0).textureID[0]);
-            GLES20.glUniform1i(texSampler2DHandle, 0);
+                // activate texture 0, bind it, and pass to shader
+                GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,
+                        mTextures.get(0).textureID[0]);
+                GLES20.glUniform1i(texSampler2DHandle, 0);
 
-            // pass the model view matrix to the shader
-            GLES20.glUniformMatrix4fv(cameraPositionHandle, 1, false,
-                    modelViewMatrix, 0);
-            GLES20.glUniform3f(lightPositionHandle, lightPositionX, lightPositionY, lightPositionZ);
-            GLES20.glUniform3f(vertexPositionOffsetHandle, vertexPositionOffsetX, vertexPositionOffsetY, vertexPositionOffsetZ);
-            GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
-                    modelViewProjection, 0);
+                // pass the model view matrix to the shader
+                GLES20.glUniformMatrix4fv(cameraPositionHandle, 1, false,
+                        modelViewMatrix, 0);
+                GLES20.glUniform3f(lightPositionHandle, lightPositionX, lightPositionY, lightPositionZ);
+                GLES20.glUniform3f(vertexPositionOffsetHandle, vertexPositionOffsetX, vertexPositionOffsetY, vertexPositionOffsetZ);
+                GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
+                        modelViewProjection, 0);
 
-            // finally draw the teapot
-            //GLES20.glDrawElements(GLES20.GL_TRIANGLES,
-            //        meshObject.getNumObjectIndex(),
-            //        GLES20.GL_UNSIGNED_SHORT,
-            //        meshObject.getIndices());
-            GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, meshObject.getNumObjectIndex());
+                GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, meshObject.getVertexCount(i));
 
-            // disable the enabled arrays
-            GLES20.glDisableVertexAttribArray(vertexHandle);
-            GLES20.glDisableVertexAttribArray(textureCoordHandle);
+                // disable the enabled arrays
+                GLES20.glDisableVertexAttribArray(vertexHandle);
+                GLES20.glDisableVertexAttribArray(textureCoordHandle);
 
-            Utils.checkGLError("Render Frame");
-
+                Utils.checkGLError("Render Frame");
+            }
         }
 
         GLES20.glDisable(GLES20.GL_DEPTH_TEST);
