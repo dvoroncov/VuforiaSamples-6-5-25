@@ -11,9 +11,6 @@ import com.htc_cs.android.objparser.parser.util.BaseFileUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.Buffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class ModelParser {
 
@@ -24,7 +21,7 @@ public class ModelParser {
         fileUtil.setBaseFolder("");
         BufferedReader fileReader = fileUtil.getReaderFromName(fileName);
         ObjParser objParser = new ObjParser(fileUtil);
-        if(fileReader != null) {
+        if (fileReader != null) {
             try {
                 model = objParser.parse("amenemhat", fileReader);
                 model.finalize();
@@ -35,22 +32,22 @@ public class ModelParser {
     }
 
     public int getIndicesNumber() {
-        return model.getGroups().get(0).vertexCount;
+        return model.getGroups().firstElement().vertexCount;
     }
 
     public int getVerticesNumber() {
-        return model.getGroups().get(0).vertexCount / 3;
+        return model.getGroups().firstElement().vertexCount / 3;
     }
 
     public Buffer getTextureBuffer() {
-        return model.getGroups().get(0).texcoords.position(0);
+        return model.getGroups().firstElement().texcoords.position(0);
     }
 
     public Buffer getVerticesBuffer() {
-        return model.getGroups().get(0).vertices.position(0);
+        return model.getGroups().firstElement().vertices.position(0);
     }
 
     public Buffer getNormalsBuffer() {
-        return model.getGroups().get(0).normals.position(0);
+        return model.getGroups().firstElement().normals.position(0);
     }
 }

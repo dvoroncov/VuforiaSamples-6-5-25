@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.Switch;
 
 import com.vuforia.CameraDevice;
 import com.vuforia.DataSet;
@@ -54,9 +56,13 @@ public class ImageTargetsActivity extends Activity implements ARSessionControl {
     private RelativeLayout relativeLayout;
     private LoadingDialogHandler loadingDialogHandler = new LoadingDialogHandler(this);
     private AlertDialog errorDialog;
-    private SeekBar xSeekBar;
-    private SeekBar ySeekBar;
-    private SeekBar zSeekBar;
+    private SeekBar xLightSeekBar;
+    private SeekBar yLightSeekBar;
+    private SeekBar zLightSeekBar;
+    private SeekBar xOffsetSeekBar;
+    private SeekBar yOffsetSeekBar;
+    private SeekBar zOffsetSeekBar;
+    private Switch positionSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +73,13 @@ public class ImageTargetsActivity extends Activity implements ARSessionControl {
 
         startLoadingAnimation();
 
-        xSeekBar = findViewById(R.id.x_seek_bar);
-        ySeekBar = findViewById(R.id.y_seek_bar);
-        zSeekBar = findViewById(R.id.z_seek_bar);
+        positionSwitch = findViewById(R.id.position_switch);
+        xLightSeekBar = findViewById(R.id.x_light_seek_bar);
+        yLightSeekBar = findViewById(R.id.y_light_seek_bar);
+        zLightSeekBar = findViewById(R.id.z_light_seek_bar);
+        xOffsetSeekBar = findViewById(R.id.x_offset_seek_bar);
+        yOffsetSeekBar = findViewById(R.id.y_offset_seek_bar);
+        zOffsetSeekBar = findViewById(R.id.z_offset_seek_bar);
 
         datasetStrings.add(IMAGE_TARGET_DRAGON);
 
@@ -155,9 +165,34 @@ public class ImageTargetsActivity extends Activity implements ARSessionControl {
         renderer.setTextures(textures);
         ARGLSurfaceView.setRenderer(renderer);
 
-        xSeekBar.setOnSeekBarChangeListener(renderer);
-        ySeekBar.setOnSeekBarChangeListener(renderer);
-        zSeekBar.setOnSeekBarChangeListener(renderer);
+        xLightSeekBar.setOnSeekBarChangeListener(renderer);
+        yLightSeekBar.setOnSeekBarChangeListener(renderer);
+        zLightSeekBar.setOnSeekBarChangeListener(renderer);
+        xOffsetSeekBar.setOnSeekBarChangeListener(renderer);
+        yOffsetSeekBar.setOnSeekBarChangeListener(renderer);
+        zOffsetSeekBar.setOnSeekBarChangeListener(renderer);
+
+        positionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    xLightSeekBar.setVisibility(View.VISIBLE);
+                    yLightSeekBar.setVisibility(View.VISIBLE);
+                    zLightSeekBar.setVisibility(View.VISIBLE);
+                    xOffsetSeekBar.setVisibility(View.GONE);
+                    yOffsetSeekBar.setVisibility(View.GONE);
+                    zOffsetSeekBar.setVisibility(View.GONE);
+                } else {
+                    xOffsetSeekBar.setVisibility(View.VISIBLE);
+                    yOffsetSeekBar.setVisibility(View.VISIBLE);
+                    zOffsetSeekBar.setVisibility(View.VISIBLE);
+                    xLightSeekBar.setVisibility(View.GONE);
+                    yLightSeekBar.setVisibility(View.GONE);
+                    zLightSeekBar.setVisibility(View.GONE);
+                }
+            }
+        });
+        positionSwitch.setChecked(true);
     }
 
 

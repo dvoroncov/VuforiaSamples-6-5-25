@@ -76,7 +76,9 @@
     <string name="failed_to_deinitialize_trackers">Failed to deinitialize trackers</string>
     <string name="resuming_vuforia_failed">Resuming Vuforia failed</string>
     <string name="failed_to_initialize_tracker">Failed to initialize tracker.</string>
-    <string name="light_position_x">Light position X:</string>
-    <string name="light_position_y">Light position Y:</string>
-    <string name="light_position_z">Light position Z:</string>
+    <string name="position_x">Position X:</string>
+    <string name="position_y">Position Y:</string>
+    <string name="position_z">Position Z:</string>
+    <string name="light">Light</string>
+    <string name="offset">Offset</string>
 </resources>
