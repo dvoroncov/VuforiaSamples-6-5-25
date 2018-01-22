@@ -46,14 +46,17 @@ public class ImageTargetRenderer
     private int texSampler2DHandle;
     private int cameraPositionHandle;
     private int lightPositionHandle;
+    private int vertexPositionOffsetHandle;
 
-    private float xlightPosition = 0;
-    private float ylightPosition = 0;
-    private float zlightPosition = 0;
+    private float lightPositionX = 0;
+    private float lightPositionY = 0;
+    private float lightPositionZ = 0;
+
+    private float vertexPositionOffsetX = 0;
+    private float vertexPositionOffsetY = 0;
+    private float vertexPositionOffsetZ = 0;
 
     private MeshObject meshObject;
-
-    private float kBuildingScale = 0.012f;
 
     private boolean mIsActive = false;
     private boolean modelIsLoaded = false;
@@ -150,6 +153,8 @@ public class ImageTargetRenderer
                 "cameraPosition");
         lightPositionHandle = GLES20.glGetUniformLocation(shaderProgramID,
                 "lightPosition");
+        vertexPositionOffsetHandle = GLES20.glGetUniformLocation(shaderProgramID,
+                "vertexPositionOffset");
 
         if (!modelIsLoaded) {
             meshObject = new Amenemhat(activity);
@@ -217,9 +222,8 @@ public class ImageTargetRenderer
             // pass the model view matrix to the shader
             GLES20.glUniformMatrix4fv(cameraPositionHandle, 1, false,
                     modelViewMatrix, 0);
-            //GLES20.glUniformMatrix4fv(lightPositionHandle, 1, false,
-            //        modelViewMatrix, 0);
-            GLES20.glUniform3f(lightPositionHandle, xlightPosition, ylightPosition, zlightPosition);
+            GLES20.glUniform3f(lightPositionHandle, lightPositionX, lightPositionY, lightPositionZ);
+            GLES20.glUniform3f(vertexPositionOffsetHandle, vertexPositionOffsetX, vertexPositionOffsetY, vertexPositionOffsetZ);
             GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
                     modelViewProjection, 0);
 
@@ -257,14 +261,23 @@ public class ImageTargetRenderer
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser) {
             switch (seekBar.getId()) {
-                case R.id.x_seek_bar:
-                    xlightPosition = progress - (seekBar.getMax() / 2);
+                case R.id.x_light_seek_bar:
+                    lightPositionX = progress - (seekBar.getMax() / 2);
                     break;
-                case R.id.y_seek_bar:
-                    ylightPosition = progress - (seekBar.getMax() / 2);
+                case R.id.y_light_seek_bar:
+                    lightPositionY = progress - (seekBar.getMax() / 2);
                     break;
-                case R.id.z_seek_bar:
-                    zlightPosition = progress - (seekBar.getMax() / 2);
+                case R.id.z_light_seek_bar:
+                    lightPositionZ = progress - (seekBar.getMax() / 2);
+                    break;
+                case R.id.x_offset_seek_bar:
+                    vertexPositionOffsetX = progress - (seekBar.getMax() / 2);
+                    break;
+                case R.id.y_offset_seek_bar:
+                    vertexPositionOffsetY = progress - (seekBar.getMax() / 2);
+                    break;
+                case R.id.z_offset_seek_bar:
+                    vertexPositionOffsetZ = progress - (seekBar.getMax() / 2);
                     break;
             }
         }
