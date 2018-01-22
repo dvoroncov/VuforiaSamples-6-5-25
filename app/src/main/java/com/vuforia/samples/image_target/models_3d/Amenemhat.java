@@ -3,6 +3,7 @@ package com.vuforia.samples.image_target.models_3d;
 import android.content.Context;
 
 import com.htc_cs.android.objparser.parser.models.Group;
+import com.htc_cs.android.objparser.parser.models.Material;
 import com.vuforia.samples.image_target.utils.ModelParser;
 
 import java.nio.Buffer;
@@ -11,10 +12,9 @@ import java.util.List;
 
 public class Amenemhat extends MeshObject {
 
-    private static final String OBJ_FILE_NAME = "3dModels/amenemhat.obj";
+    private static final String OBJ_FILE_NAME = "Shotgun.obj";
 
     private List<Group> groups = new ArrayList<>();
-
 
     public Amenemhat(Context context) {
         ModelParser modelParser = new ModelParser(context, OBJ_FILE_NAME);
@@ -44,5 +44,10 @@ public class Amenemhat extends MeshObject {
     @Override
     public Buffer getNormalsBuffer(int index) {
         return groups.get(index).normals.position(0);
+    }
+
+    @Override
+    public Material getMaterial(int index) {
+        return groups.get(index).getMaterial();
     }
 }

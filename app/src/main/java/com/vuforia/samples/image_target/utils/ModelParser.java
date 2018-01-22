@@ -20,12 +20,12 @@ public class ModelParser {
 
     public ModelParser(Context context, String fileName) {
         BaseFileUtil fileUtil = new AssetsFileUtil(context.getAssets());
-        fileUtil.setBaseFolder("");
+        fileUtil.setBaseFolder("3dModels/");
         BufferedReader fileReader = fileUtil.getReaderFromName(fileName);
         ObjParser objParser = new ObjParser(fileUtil);
         if (fileReader != null) {
             try {
-                model = objParser.parse("amenemhat", fileReader);
+                model = objParser.parse("Shotgun", fileReader);
                 model.finalize();
             } catch (IOException | ParseException e) {
                 e.printStackTrace();

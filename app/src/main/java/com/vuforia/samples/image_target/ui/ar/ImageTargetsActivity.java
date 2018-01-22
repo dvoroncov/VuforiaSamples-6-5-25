@@ -42,6 +42,7 @@ public class ImageTargetsActivity extends Activity implements ARSessionControl {
     private static final String DROID = "droid";
     private static final String IMAGE_TARGET_DRAGON = "ImageTargets/Dragon.xml";
     private static final String TEXTURE_AMENEMHAT = "3dModels/amenemhat.jpg";
+    private static final String TEXTURE_SHOTGUN = "3dModels/Sg_Diffuse.png";
 
     boolean isDroidDevice = false;
 
@@ -86,7 +87,7 @@ public class ImageTargetsActivity extends Activity implements ARSessionControl {
         vuforiaAppSession.initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         textures = new Vector<>();
-        loadTextures(TEXTURE_AMENEMHAT);
+        loadTextures(TEXTURE_SHOTGUN);
 
         isDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith(DROID);
     }
