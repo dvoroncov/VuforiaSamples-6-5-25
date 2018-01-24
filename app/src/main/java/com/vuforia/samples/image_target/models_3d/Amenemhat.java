@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Amenemhat extends MeshObject {
 
-    private static final String OBJ_FILE_NAME = "Shotgun.obj";
+    private static final String OBJ_FILE_NAME = "turret.obj";
 
     private List<Group> groups = new ArrayList<>();
 

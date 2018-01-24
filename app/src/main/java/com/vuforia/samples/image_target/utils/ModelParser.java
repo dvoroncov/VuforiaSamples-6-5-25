@@ -25,7 +25,7 @@ public class ModelParser {
         ObjParser objParser = new ObjParser(fileUtil);
         if (fileReader != null) {
             try {
-                model = objParser.parse("Shotgun", fileReader);
+                model = objParser.parse("turret", fileReader);
                 model.finalize();
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
