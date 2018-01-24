@@ -36,6 +36,8 @@ import com.vuforia.samples.image_target.utils.Texture;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import io.github.controlwear.virtual.joystick.android.JoystickView;
+
 public class ImageTargetsActivity extends Activity implements ARSessionControl {
 
     private static final String LOGTAG = ImageTargetsActivity.class.getSimpleName();
@@ -43,7 +45,7 @@ public class ImageTargetsActivity extends Activity implements ARSessionControl {
     private static final String IMAGE_TARGET_DRAGON = "ImageTargets/Dragon.xml";
     private static final String TEXTURE_AMENEMHAT = "3dModels/amenemhat.jpg";
     private static final String TEXTURE_SHOTGUN = "3dModels/Sg_Diffuse.png";
-    private static final String TEXTURE_TUREl = "3dModels/tex_metal_combinated.jpg";
+    private static final String TEXTURE_TURRET = "3dModels/tex_metal_combinated.jpg";
 
     boolean isDroidDevice = false;
 
@@ -58,13 +60,7 @@ public class ImageTargetsActivity extends Activity implements ARSessionControl {
     private RelativeLayout relativeLayout;
     private LoadingDialogHandler loadingDialogHandler = new LoadingDialogHandler(this);
     private AlertDialog errorDialog;
-    private SeekBar xLightSeekBar;
-    private SeekBar yLightSeekBar;
-    private SeekBar zLightSeekBar;
-    private SeekBar xOffsetSeekBar;
-    private SeekBar yOffsetSeekBar;
-    private SeekBar zOffsetSeekBar;
-    private Switch positionSwitch;
+    private JoystickView joystickView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,20 +71,14 @@ public class ImageTargetsActivity extends Activity implements ARSessionControl {
 
         startLoadingAnimation();
 
-        positionSwitch = findViewById(R.id.position_switch);
-        xLightSeekBar = findViewById(R.id.x_light_seek_bar);
-        yLightSeekBar = findViewById(R.id.y_light_seek_bar);
-        zLightSeekBar = findViewById(R.id.z_light_seek_bar);
-        xOffsetSeekBar = findViewById(R.id.x_offset_seek_bar);
-        yOffsetSeekBar = findViewById(R.id.y_offset_seek_bar);
-        zOffsetSeekBar = findViewById(R.id.z_offset_seek_bar);
+        joystickView = findViewById(R.id.joystick);
 
         datasetStrings.add(IMAGE_TARGET_DRAGON);
 
         vuforiaAppSession.initAR(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         textures = new Vector<>();
-        loadTextures(TEXTURE_TUREl);
+        loadTextures(TEXTURE_TURRET);
 
         isDroidDevice = android.os.Build.MODEL.toLowerCase().startsWith(DROID);
     }
@@ -167,34 +157,7 @@ public class ImageTargetsActivity extends Activity implements ARSessionControl {
         renderer.setTextures(textures);
         ARGLSurfaceView.setRenderer(renderer);
 
-        xLightSeekBar.setOnSeekBarChangeListener(renderer);
-        yLightSeekBar.setOnSeekBarChangeListener(renderer);
-        zLightSeekBar.setOnSeekBarChangeListener(renderer);
-        xOffsetSeekBar.setOnSeekBarChangeListener(renderer);
-        yOffsetSeekBar.setOnSeekBarChangeListener(renderer);
-        zOffsetSeekBar.setOnSeekBarChangeListener(renderer);
-
-        positionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    xLightSeekBar.setVisibility(View.VISIBLE);
-                    yLightSeekBar.setVisibility(View.VISIBLE);
-                    zLightSeekBar.setVisibility(View.VISIBLE);
-                    xOffsetSeekBar.setVisibility(View.GONE);
-                    yOffsetSeekBar.setVisibility(View.GONE);
-                    zOffsetSeekBar.setVisibility(View.GONE);
-                } else {
-                    xOffsetSeekBar.setVisibility(View.VISIBLE);
-                    yOffsetSeekBar.setVisibility(View.VISIBLE);
-                    zOffsetSeekBar.setVisibility(View.VISIBLE);
-                    xLightSeekBar.setVisibility(View.GONE);
-                    yLightSeekBar.setVisibility(View.GONE);
-                    zLightSeekBar.setVisibility(View.GONE);
-                }
-            }
-        });
-        positionSwitch.setChecked(true);
+        joystickView.setOnMoveListener(renderer);
     }
 
 

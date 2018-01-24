@@ -81,4 +81,5 @@
     <string name="position_z">Position Z:</string>
     <string name="light">Light</string>
     <string name="offset">Offset</string>
+    <string name="angle">Angle</string>
 </resources>

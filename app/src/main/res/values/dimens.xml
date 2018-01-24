@@ -12,5 +12,7 @@
     <dimen name="menu_entries_top_down_radio_padding">7dp</dimen>
     <dimen name="main_margin">16dp</dimen>
     <dimen name="seek_bar_layout_bottom_margin">40dp</dimen>
+    <dimen name="joystick_size">160dp</dimen>
+    <dimen name="joystick_margin">35dp</dimen>
 
 </resources>

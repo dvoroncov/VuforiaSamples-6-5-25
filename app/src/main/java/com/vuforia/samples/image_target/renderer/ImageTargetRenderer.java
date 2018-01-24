@@ -28,8 +28,10 @@ import java.util.Vector;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import io.github.controlwear.virtual.joystick.android.JoystickView;
+
 public class ImageTargetRenderer
-        implements GLSurfaceView.Renderer, ARRendererControl, SeekBar.OnSeekBarChangeListener {
+        implements GLSurfaceView.Renderer, ARRendererControl, JoystickView.OnMoveListener {
 
     private static final String LOGTAG = "ImageTargetRenderer";
 
@@ -48,6 +50,7 @@ public class ImageTargetRenderer
     private int cameraPositionHandle;
     private int lightPositionHandle;
     private int vertexPositionOffsetHandle;
+    private int vertexPositionAngleHandle;
 
     private float lightPositionX = 0;
     private float lightPositionY = 0;
@@ -56,6 +59,7 @@ public class ImageTargetRenderer
     private float vertexPositionOffsetX = 0;
     private float vertexPositionOffsetY = 0;
     private float vertexPositionOffsetZ = 0;
+    private float vertexPositionAngle = 0;
 
     private MeshObject meshObject;
 
@@ -158,6 +162,8 @@ public class ImageTargetRenderer
                 "lightPosition");
         vertexPositionOffsetHandle = GLES20.glGetUniformLocation(shaderProgramID,
                 "vertexPositionOffset");
+        vertexPositionAngleHandle = GLES20.glGetUniformLocation(shaderProgramID,
+                "vertexPositionAngle");
 
         if (!modelIsLoaded) {
             meshObject = new Amenemhat(activity);
@@ -231,6 +237,7 @@ public class ImageTargetRenderer
                         modelViewMatrix, 0);
                 GLES20.glUniform3f(lightPositionHandle, lightPositionX, lightPositionY, lightPositionZ);
                 GLES20.glUniform3f(vertexPositionOffsetHandle, vertexPositionOffsetX, vertexPositionOffsetY, vertexPositionOffsetZ);
+                GLES20.glUniform1f(vertexPositionAngleHandle, vertexPositionAngle);
                 GLES20.glUniformMatrix4fv(mvpMatrixHandle, 1, false,
                         modelViewProjection, 0);
 
@@ -259,39 +266,11 @@ public class ImageTargetRenderer
 
     }
 
+
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (fromUser) {
-            switch (seekBar.getId()) {
-                case R.id.x_light_seek_bar:
-                    lightPositionX = progress - (seekBar.getMax() / 2);
-                    break;
-                case R.id.y_light_seek_bar:
-                    lightPositionY = progress - (seekBar.getMax() / 2);
-                    break;
-                case R.id.z_light_seek_bar:
-                    lightPositionZ = progress - (seekBar.getMax() / 2);
-                    break;
-                case R.id.x_offset_seek_bar:
-                    vertexPositionOffsetX = progress - (seekBar.getMax() / 2);
-                    break;
-                case R.id.y_offset_seek_bar:
-                    vertexPositionOffsetY = progress - (seekBar.getMax() / 2);
-                    break;
-                case R.id.z_offset_seek_bar:
-                    vertexPositionOffsetZ = progress - (seekBar.getMax() / 2);
-                    break;
-            }
+    public void onMove(int angle, int strength) {
+        if(strength != 0) {
+            vertexPositionAngle = -angle;
         }
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
     }
 }
